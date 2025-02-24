@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:new_app/API_service/category_data/category_data.dart';
 import 'package:new_app/API_service/news.dart';
+import 'package:new_app/API_service/search_news.dart';
 import 'package:new_app/API_service/slider_data.dart';
 import 'package:new_app/models/article_model.dart';
 import 'package:new_app/models/category_model/category_model.dart';
 import 'package:new_app/models/slider_model.dart';
 import 'package:new_app/ui/blog_view.dart';
 import 'package:new_app/ui/category_view/category_view.dart';
-import 'package:new_app/zhome/article_view.dart';
-
+import 'package:new_app/home_screen/article_view.dart';
+import 'package:new_app/ui/search/search_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -57,6 +58,20 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 239, 245, 245),
       appBar: AppBar(
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchView()),
+              );
+            },
+            child: Icon(
+              Icons.search,
+
+            ),
+          ),
+        ],
         backgroundColor: Colors.blue,
         title: Text('News'),
       ),

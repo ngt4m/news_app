@@ -37,7 +37,7 @@ class _ListCategoryViewState extends State<ListCategoryView> {
           )
         : Scaffold(
             appBar: AppBar(
-              title: Text('News'),
+              title: Text(widget.name),
             ),
             body: Container(
               child: ListView.builder(

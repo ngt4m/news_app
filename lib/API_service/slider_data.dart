@@ -2,12 +2,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:new_app/api/api_key.dart';
 import 'package:new_app/models/slider_model.dart';
-
+import 'package:intl/intl.dart';
 class SliderData {
   List<SliderModel> sliders = [];
 
   Future<void> GetSliderData() async {
-    String url = 'https://newsapi.org/v2/everything?q=tesla&from=2024-08-14&sortBy=publishedAt&apiKey=$API_key';
+DateTime now = DateTime.now();
+DateTime formatDate = now.subtract(Duration(days: 2));
+
+    String url = 'https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=$API_key';
 
     var response = await http.get(Uri.parse(url));
     var jsonData = jsonDecode(response.body);
