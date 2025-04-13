@@ -18,11 +18,6 @@ class _SearchViewState extends State<SearchView> {
 
 
 
-  void _SearchNews() {
-    final search = Provider.of<SearchNews>(context, listen: false);
-    search.GetSearchNews(TextBox.textsearch.text);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,6 +105,13 @@ class _TextBoxState extends State<TextBox> {
       });
     });
   }
+  @override
+ 
+  void _SearchNews() {
+    final search = Provider.of<SearchNews>(context, listen: false);
+    search.GetSearchNews(TextBox.textsearch.text);
+  }
+
 
 
   @override
@@ -120,7 +122,9 @@ class _TextBoxState extends State<TextBox> {
      
           decoration: InputDecoration(
             hintText: 'Search',
-            suffixIcon: Icon(Icons.search),
+            suffixIcon: IconButton(onPressed: (){
+              _SearchNews();
+            }, icon: Icon(Icons.search)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
             ),

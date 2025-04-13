@@ -35,6 +35,8 @@ class ShowCategoryView extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w300,
               ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             subtitle: Text(publish),
           ),

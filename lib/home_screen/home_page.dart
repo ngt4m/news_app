@@ -68,7 +68,6 @@ class _HomePageState extends State<HomePage> {
             },
             child: Icon(
               Icons.search,
-
             ),
           ),
         ],
@@ -101,14 +100,27 @@ class _HomePageState extends State<HomePage> {
                     //   height: 10,
                     // ),
                     Padding(
-                      padding: EdgeInsets.only(right: 300),
-                      child: Text(
-                        'Breaking News',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
+                        padding: EdgeInsets.only(right: 300),
+                        child: RichText(
+                          text: TextSpan(children: [
+                            TextSpan(
+                                text: "Breaking  ",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w300,
+                                )),
+                            TextSpan(
+                                text: " News! ",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    backgroundColor: Color.fromARGB(255, 252, 0, 0),
+                                    fontWeight: FontWeight.bold,
+                            ),
+                            ),
+                          ]),
+                        )),
                     SizedBox(
                       height: 10,
                     ),
@@ -142,6 +154,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(
                       height: 20,
+
+                    ),
+                    Text("Daily News",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400
+                    ),
                     ),
                     ListView.builder(
                       //  physics: NeverScrollableScrollPhysics(),
@@ -200,6 +220,8 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Text(
                 name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),

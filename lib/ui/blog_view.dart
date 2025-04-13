@@ -36,6 +36,8 @@ class BlogView extends StatelessWidget {
               fontSize: 15,
               fontWeight: FontWeight.w300,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           subtitle: Text(publish),
         ),
