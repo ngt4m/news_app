@@ -1,8 +1,13 @@
 # new_app
 
-A new Flutter project.
+News app 
 
 ## Getting Started
+Using Flutter framework 
+
+Intergrates News API from newsapi.org to fetch and display up-to-date articles, images, and multimedia content. 
+
+MVVM  
 
 This project is a starting point for a Flutter application.
 
