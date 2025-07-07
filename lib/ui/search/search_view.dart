@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:new_app/API_service/search_news.dart';
 import 'package:new_app/home_screen/article_view.dart';
 import 'package:new_app/models/search_model.dart';
@@ -12,19 +11,16 @@ class SearchView extends StatefulWidget {
   _SearchViewState createState() => _SearchViewState();
 }
 
-//search video
 class _SearchViewState extends State<SearchView> {
   final ScrollController scrollController = ScrollController();
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 239, 245, 245),
+      backgroundColor: const Color.fromARGB(255, 239, 245, 245),
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text('Search'),
+        title: const Text('Search'),
       ),
       body: Column(
         children: [
@@ -34,20 +30,20 @@ class _SearchViewState extends State<SearchView> {
           ),
           Expanded(
             child: Consumer<SearchNews>(
-              builder: (context, search,child){
-                if(search.isLoading && search.results.isEmpty){
-                  return const Center(child: CircularProgressIndicator(),);
+              builder: (context, search, child) {
+                if (search.isLoading && search.results.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (search.results.isEmpty) {
+                  return const Center(child: Text('No results found'));
                 }
-             
                 return ListView.builder(
                   controller: scrollController,
                   itemCount: search.results.length,
                   itemBuilder: (context, index) {
-                    final SearchModel searchNews  = search.results[index];
-                    return ListItems(searchNews, context);
-                  }
+                    final SearchModel searchNews = search.results[index];
+                    return listItems(searchNews, context);
+                  },
                 );
-
               },
             ),
           )
@@ -57,7 +53,7 @@ class _SearchViewState extends State<SearchView> {
   }
 }
 
-Widget ListItems(SearchModel search, BuildContext context) {
+Widget listItems(SearchModel search, BuildContext context) {
   return GestureDetector(
     onTap: () {
       Navigator.push(
@@ -67,35 +63,40 @@ Widget ListItems(SearchModel search, BuildContext context) {
         ),
       );
     },
-    child: ListTile(
-      leading: Image.network(
-        search.image,
-        height: 60,
-        width: 100,
-        fit: BoxFit.cover,
-      ),
-      title: Text(
-        search.title,
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w300,
+    child: Card(
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: ListTile(
+        leading: Image.network(
+          search.image,
+          height: 60,
+          width: 100,
+          fit: BoxFit.cover,
         ),
+        title: Text(
+          search.title,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(search.publish),
       ),
-      subtitle: Text(search.publish),
     ),
   );
 }
 
 class TextBox extends StatefulWidget {
   const TextBox({Key? key}) : super(key: key);
-  static TextEditingController textsearch = TextEditingController();
+
   @override
   _TextBoxState createState() => _TextBoxState();
 }
 
 class _TextBoxState extends State<TextBox> {
   final focus = FocusNode();
+  final TextEditingController textSearch = TextEditingController();
   bool isFocus = false;
+
   @override
   void initState() {
     super.initState();
@@ -105,38 +106,43 @@ class _TextBoxState extends State<TextBox> {
       });
     });
   }
+
   @override
- 
-  void _SearchNews() {
-    final search = Provider.of<SearchNews>(context, listen: false);
-    search.GetSearchNews(TextBox.textsearch.text);
+  void dispose() {
+    focus.dispose();
+    textSearch.dispose();
+    super.dispose();
   }
 
-
+  void _searchNews() {
+    final text = textSearch.text.trim();
+    if (text.isNotEmpty) {
+      FocusScope.of(context).unfocus();
+      final searchProvider = Provider.of<SearchNews>(context, listen: false);
+      searchProvider.getSearchNews(text);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-     
-          decoration: InputDecoration(
-            hintText: 'Search',
-            suffixIcon: IconButton(onPressed: (){
-              _SearchNews();
-            }, icon: Icon(Icons.search)),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-          controller: TextBox.textsearch,
-          onSubmitted: (value) {
-            final newsProvider =
-                Provider.of<SearchNews>(context, listen: false);
-            newsProvider.GetSearchNews(value);
-          },
+    return TextField(
+      focusNode: focus,
+      controller: textSearch,
+      decoration: InputDecoration(
+        hintText: 'Search',
+        suffixIcon: IconButton(
+          onPressed: _searchNews,
+          icon: const Icon(Icons.search),
         ),
-      ],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      onSubmitted: (value) {
+        if (value.trim().isNotEmpty) {
+          _searchNews();
+        }
+      },
     );
   }
 }

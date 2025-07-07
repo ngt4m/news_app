@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "795743977511",
+    "project_id": "primal-outrider-423809-v9",
+    "storage_bucket": "primal-outrider-423809-v9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795743977511:android:09886fca3f6f69a3414e02",
+        "android_client_info": {
+          "package_name": "com.example.new_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBO3LHSfZxaIVD8BNQNGdmlEzWu8YJT7NE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

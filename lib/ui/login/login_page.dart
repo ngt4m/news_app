@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_app/provider/firestore_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -8,11 +9,32 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+    final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
   bool _isChecked = false;
+    void login() async {
+    setState(() => isLoading = true);
+    try {
+      await FirestoreProvider().signInWithEmail(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login successful')),
+      );
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
+    setState(() => isLoading = false);
+  }
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
-    //double h = MediaQuery.of(context).size.height;
+  
 
     return Scaffold(
       body: Stack(
@@ -78,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 50,
                           width: 0.8 * w,
                           child: TextField(
+                            controller: emailController,
                             style: TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               hintText: 'Email',
@@ -101,6 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 50,
                           width: 0.8 * w,
                           child: TextField(
+                            controller: passwordController,
                             obscureText: true,
                             obscuringCharacter: '*',
                             style: const TextStyle(color: Colors.white),
@@ -148,25 +172,27 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(
                           height: 30,
                         ),
-                        Container(
-                          height: 50,
-                          width: 0.8 * w,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(30),
-                            ),
-                            color: Color.fromARGB(255, 58, 152, 228),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'Log In',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
+                     isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.blue,
+                            )
+                          : ElevatedButton(
+                              onPressed: login,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                minimumSize: Size(0.8 * w, 50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              child: const Text(
+                                'Login',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
                               ),
                             ),
-                          ),
-                        ),
                         const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
