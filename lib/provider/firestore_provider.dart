@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/material.dart';
 class FirestoreProvider {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -30,6 +30,7 @@ class FirestoreProvider {
   // Đăng nhập
   Future<User?> signInWithEmail(String email, String password) async {
     try {
+      //kiểm tra trong firebase xem có không
       UserCredential result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -44,6 +45,7 @@ class FirestoreProvider {
   Future<void> signOut() async {
     await _auth.signOut();
   }
+
 
   // Lấy user hiện tại
   User? get currentUser => _auth.currentUser;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_app/API_service/search_news.dart';
-import 'package:new_app/home_screen/article_view.dart';
+import 'package:new_app/ui/home_screen/article_view.dart';
 import 'package:new_app/models/search_model.dart';
 import 'package:provider/provider.dart';
 

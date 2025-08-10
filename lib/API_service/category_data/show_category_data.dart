@@ -7,7 +7,7 @@ class ShowCategoryData {
   List<ShowCategoryModel> categories = [];
 
   Future<void> GetShowCategoryData(String category) async {
-    
+    //gọi api cho category
     String url =
         'https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=$API_key';
 

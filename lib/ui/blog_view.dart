@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:new_app/home_screen/article_view.dart';
+import 'package:new_app/ui/home_screen/article_view.dart';
 
 class BlogView extends StatelessWidget {
   final String title, image, publish, link;

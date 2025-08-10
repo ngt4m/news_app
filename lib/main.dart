@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:new_app/API_service/search_news.dart';
 import 'package:new_app/firebase_options.dart';
-import 'package:new_app/home_screen/home_page.dart';
+import 'package:new_app/ui/home_screen/home_page.dart';
 import 'package:new_app/ui/login/login_page.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -27,14 +26,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'News App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: AuthWrapper(),
-    );
+        title: 'News App',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: AuthWrapper(),
+        routes: {
+          '/login': (_) => const LoginPage(),
+          '/home': (_) => HomePage(),
+        });
   }
 }
 
@@ -50,7 +52,7 @@ class AuthWrapper extends StatelessWidget {
           );
         }
         if (snapshot.hasData) {
-          return  HomePage(); // màn hình chính sau đăng nhập
+          return HomePage(); // màn hình chính sau đăng nhập
         } else {
           return const LoginPage(); // màn hình đăng nhập
         }

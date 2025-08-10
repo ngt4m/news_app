@@ -13,7 +13,8 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   bool isLoading = false;
-
+  
+//đăng ký tài khoản
   void register() async {
     setState(() => isLoading = true);
     try {
@@ -74,6 +75,7 @@ class _SignUpState extends State<SignUp> {
                         const SizedBox(
                           width: 20,
                         ),
+                        //chưa làm
                         const Text('Sign up with Goole'),
                       ],
                     ),
@@ -97,13 +99,13 @@ class _SignUpState extends State<SignUp> {
                       controller: nameController,
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                        hintText: 'Name user',
+                        hintText: 'Name User',
                         hintStyle: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.grey,
                         ),
                         suffixIcon: const Padding(
                           padding: EdgeInsets.only(right: 30),
-                          child: Icon(Icons.email),
+                          child: Icon(Icons.tag_faces_sharp),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -123,7 +125,7 @@ class _SignUpState extends State<SignUp> {
                       decoration: InputDecoration(
                         hintText: 'Email',
                         hintStyle: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.grey,
                         ),
                         suffixIcon: const Padding(
                           padding: EdgeInsets.only(right: 30),
@@ -149,7 +151,7 @@ class _SignUpState extends State<SignUp> {
                       decoration: InputDecoration(
                         hintText: 'Passworld',
                         hintStyle: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.grey,
                         ),
                         suffixIcon: const Padding(
                           padding: EdgeInsets.only(right: 30),

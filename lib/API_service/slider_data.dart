@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:new_app/api/api_key.dart';
 import 'package:new_app/models/slider_model.dart';
-import 'package:intl/intl.dart';
 class SliderData {
   List<SliderModel> sliders = [];
 

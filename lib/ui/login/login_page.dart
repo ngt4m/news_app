@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_app/provider/firestore_provider.dart';
+import 'package:new_app/ui/login/sign_up.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,32 +10,57 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-    final TextEditingController emailController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
   bool _isChecked = false;
-    void login() async {
+  bool _isPasswordVisible = false;
+
+  // void login() async {
+  //   setState(() => isLoading = true);
+  //   try {
+  //     await FirestoreProvider().signInWithEmail(
+  //       emailController.text.trim(),
+  //       passwordController.text.trim(),
+  //     );
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Login successful')),
+  //     );
+  //   //  Navigator.pushReplacementNamed(context, '/home');
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text(e.toString())),
+  //     );
+  //   }
+  //   setState(() => isLoading = false);
+  // }
+
+// đăng nhập
+  Future<void> login() async {
     setState(() => isLoading = true);
     try {
       await FirestoreProvider().signInWithEmail(
         emailController.text.trim(),
         passwordController.text.trim(),
       );
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login successful')),
       );
-      Navigator.pushReplacementNamed(context, '/home');
+      // không pushNamed ở đây. AuthWrapper sẽ tự trả về HomePage.
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
+    } finally {
+      if (mounted) setState(() => isLoading = false);
     }
-    setState(() => isLoading = false);
   }
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
-  
 
     return Scaffold(
       body: Stack(
@@ -105,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: InputDecoration(
                               hintText: 'Email',
                               hintStyle: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.grey,
                               ),
                               suffixIcon: const Padding(
                                 padding: EdgeInsets.only(right: 30),
@@ -125,17 +151,29 @@ class _LoginPageState extends State<LoginPage> {
                           width: 0.8 * w,
                           child: TextField(
                             controller: passwordController,
-                            obscureText: true,
+                            obscureText: !_isPasswordVisible,
                             obscuringCharacter: '*',
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               hintText: 'Passworld',
                               hintStyle: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.grey,
                               ),
-                              suffixIcon: const Padding(
-                                padding: EdgeInsets.only(right: 30),
-                                child: Icon(Icons.key),
+                              suffixIcon: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: IconButton(
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  //  color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  },
+                                ),
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -172,43 +210,52 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(
                           height: 30,
                         ),
-                     isLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.blue,
-                            )
-                          : ElevatedButton(
-                              onPressed: login,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                minimumSize: Size(0.8 * w, 50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                        isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.blue,
+                              )
+                            : ElevatedButton(
+                                onPressed: login,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  minimumSize: Size(0.8 * w, 50),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
                                 ),
                               ),
-                              child: const Text(
-                                'Login',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                        const Row(
+                        Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 "Don't have an acconunt?",
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
-                              Text(
-                                'Sign up',
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 15,
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const SignUp()),
+                                  );
+                                },
+                                child: const Text(
+                                  'Sign up',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 15,
+                                  ),
                                 ),
-                              ),
+                              )
                             ]),
                       ],
                     ),

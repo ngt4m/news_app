@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:new_app/API_service/category_data/category_data.dart';
 import 'package:new_app/API_service/news.dart';
-import 'package:new_app/API_service/search_news.dart';
 import 'package:new_app/API_service/slider_data.dart';
 import 'package:new_app/models/article_model.dart';
 import 'package:new_app/models/category_model/category_model.dart';
 import 'package:new_app/models/slider_model.dart';
 import 'package:new_app/ui/blog_view.dart';
 import 'package:new_app/ui/category_view/category_view.dart';
-import 'package:new_app/home_screen/article_view.dart';
+import 'package:new_app/ui/home_screen/article_view.dart';
+import 'package:new_app/ui/login/sign_up.dart';
 import 'package:new_app/ui/search/search_view.dart';
+import 'package:new_app/ui/setting/setting_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -26,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   List<ArticleModel> article = [];
   int activeIndex = 0;
   bool loading = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -53,6 +57,36 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> firebaseLogout(BuildContext context) async {
+    try {
+      // 1. Đăng xuất khỏi Firebase Auth
+      await _auth.signOut();
+
+      // 2. Xóa dữ liệu cục bộ 
+      // final prefs = await SharedPreferences.getInstance();
+      // await prefs.clear(); // Hoặc xóa từng key cụ thể
+
+      // 3. Chuyển hướng đến màn hình đăng nhập
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/login',
+        (Route<dynamic> route) => false,
+      );
+
+      // 4. Hiển thị thông báo
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đã đăng xuất thành công')),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Lỗi khi đăng xuất: ${e.toString()}')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,16 +94,41 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         actions: [
           GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchView()),
-              );
-            },
-            child: Icon(
-              Icons.search,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchView()),
+                );
+              },
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchView(),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.search))),
+          PopupMenuButton<String>(
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.white,
+              size: 20,
             ),
-          ),
+            onSelected: (value) {
+              if (value == 'logout') {
+                firebaseLogout(context);
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem<String>(
+                
+                value: 'logout',
+                child: Text('Sign Out'),
+              ),
+            ],
+          )
         ],
         backgroundColor: Colors.blue,
         title: Text('News'),
@@ -111,13 +170,13 @@ class _HomePageState extends State<HomePage> {
                                   fontWeight: FontWeight.w300,
                                 )),
                             TextSpan(
-                                text: " News! ",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    backgroundColor: Color.fromARGB(255, 252, 0, 0),
-                                    fontWeight: FontWeight.bold,
-                            ),
+                              text: " News! ",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                backgroundColor: Color.fromARGB(255, 252, 0, 0),
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ]),
                         )),
@@ -154,14 +213,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(
                       height: 20,
-
                     ),
-                    Text("Daily News",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400
-                    ),
+                    Text(
+                      "Daily News",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400),
                     ),
                     ListView.builder(
                       //  physics: NeverScrollableScrollPhysics(),
@@ -183,7 +241,7 @@ class _HomePageState extends State<HomePage> {
             ),
     );
   }
-
+//
   Widget buildImage(String image, String name, int index, String link) {
     return GestureDetector(
       onTap: () {
