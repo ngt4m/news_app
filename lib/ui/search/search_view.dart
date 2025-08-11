@@ -3,6 +3,7 @@ import 'package:new_app/API_service/search_news.dart';
 import 'package:new_app/ui/home_screen/article_view.dart';
 import 'package:new_app/models/search_model.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 
 class SearchView extends StatefulWidget {
   const SearchView({Key? key}) : super(key: key);
@@ -96,53 +97,83 @@ class _TextBoxState extends State<TextBox> {
   final focus = FocusNode();
   final TextEditingController textSearch = TextEditingController();
   bool isFocus = false;
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
-    focus.addListener(() {
-      setState(() {
-        isFocus = focus.hasFocus;
-      });
-    });
+    focus.addListener(() => setState(() => isFocus = focus.hasFocus));
+    textSearch.addListener(() => setState(() {})); // to show/hide clear button
   }
 
   @override
   void dispose() {
+    _debounce?.cancel();
     focus.dispose();
     textSearch.dispose();
     super.dispose();
   }
 
-  void _searchNews() {
-    final text = textSearch.text.trim();
-    if (text.isNotEmpty) {
-      FocusScope.of(context).unfocus();
-      final searchProvider = Provider.of<SearchNews>(context, listen: false);
-      searchProvider.getSearchNews(text);
-    }
+  void _runSearch(String query) {
+    final q = query.trim();
+    if (q.isEmpty) return;
+    FocusScope.of(context).unfocus();
+    Provider.of<SearchNews>(context, listen: false).getSearchNews(q);
+  }
+
+  void _searchNow() => _runSearch(textSearch.text);
+
+  // optional debounce when typing
+  void _onChanged(String value) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 450), () {
+      if (value.trim().isNotEmpty) _runSearch(value);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final hasText = textSearch.text.isNotEmpty;
+
     return TextField(
       focusNode: focus,
       controller: textSearch,
+      textInputAction: TextInputAction.search,
+      onSubmitted: (_) => _searchNow(),
+      onChanged: _onChanged,
       decoration: InputDecoration(
         hintText: 'Search',
-        suffixIcon: IconButton(
-          onPressed: _searchNews,
-          icon: const Icon(Icons.search),
+        prefixIcon: const Icon(Icons.search),
+        suffixIcon: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (hasText)
+              IconButton(
+                tooltip: 'Clear',
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  textSearch.clear();
+                },
+              ),
+          ],
         ),
+        filled: true,
+        fillColor: Theme.of(context).inputDecorationTheme.fillColor ??
+            Colors.grey.withOpacity(0.08),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide.none),
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide.none),
+        focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary, width: 1.6),
         ),
       ),
-      onSubmitted: (value) {
-        if (value.trim().isNotEmpty) {
-          _searchNews();
-        }
-      },
     );
   }
 }

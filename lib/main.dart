@@ -12,10 +12,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(
-    Provider(
+    ChangeNotifierProvider(
       create: (_) => SearchNews(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }

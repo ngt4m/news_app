@@ -109,7 +109,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     );
                   },
-                  icon: Icon(Icons.search))),
+                  icon: Icon(Icons.search,
+                  color: Colors.white,
+                  size: 20,
+                  ))),
           PopupMenuButton<String>(
             icon: const Icon(
               Icons.more_vert,
