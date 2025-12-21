@@ -3,6 +3,7 @@ import 'package:new_app/API_service/search_news.dart';
 import 'package:new_app/firebase_options.dart';
 import 'package:new_app/ui/home_screen/home_page.dart';
 import 'package:new_app/ui/login/login_page.dart';
+import 'package:new_app/ui/search/search_view.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/login': (_) => const LoginPage(),
           '/home': (_) => HomePage(),
+         
         });
   }
 }

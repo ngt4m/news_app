@@ -16,6 +16,7 @@ class SearchNews extends ChangeNotifier{
   Future getSearchNews(String query) async {
     _isLoading = true;
     results.clear();
+    notifyListeners();
     try {
       Map<String, String> parameters = {
         'q': query,
@@ -53,7 +54,8 @@ class SearchNews extends ChangeNotifier{
       print('Error fetching news: $e');
       rethrow;
     } finally {
-      _isLoading = false;
+         notifyListeners();
+     _isLoading = false;
     }
   }
 }

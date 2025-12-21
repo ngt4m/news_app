@@ -18,39 +18,43 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 239, 245, 245),
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text('Search'),
-      ),
-      body: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(10),
-            child: TextBox(),
-          ),
-          Expanded(
-            child: Consumer<SearchNews>(
-              builder: (context, search, child) {
-                if (search.isLoading && search.results.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (search.results.isEmpty) {
-                  return const Center(child: Text('No results found'));
-                }
-                return ListView.builder(
-                  controller: scrollController,
-                  itemCount: search.results.length,
-                  itemBuilder: (context, index) {
-                    final SearchModel searchNews = search.results[index];
-                    return listItems(searchNews, context);
-                  },
-                );
-              },
+        backgroundColor: const Color.fromARGB(255, 239, 245, 245),
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          title: const Text('Search'),
+        ),
+        body: Column(
+          
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(10),
+              child: TextBox(),
             ),
-          )
-        ],
-      ),
-    );
+            Expanded(
+              child: Consumer<SearchNews>(
+                builder: (context, search, child) {
+                  if (search.isLoading && search.results.isEmpty) {
+                    return const Center(child: CircularProgressIndicator());
+                  } 
+                  else if (search.results.isEmpty) {
+                    return const Center(child: Text('No results found'));
+                  }
+      
+                  return ListView.builder(
+                    controller: scrollController,
+                    itemCount: search.results.length,
+                    itemBuilder: (context, index) {
+                      final SearchModel searchNews = search.results[index];
+                      return listItems(searchNews, context);
+                    },
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      );
+    
   }
 }
 
@@ -118,8 +122,15 @@ class _TextBoxState extends State<TextBox> {
     final q = query.trim();
     if (q.isEmpty) return;
     FocusScope.of(context).unfocus();
-    Provider.of<SearchNews>(context, listen: false).getSearchNews(q);
+    
+    WidgetsBinding.instance.addPostFrameCallback((_){ 
+      if(mounted){
+   Provider.of<SearchNews>(context, listen: false).getSearchNews(q);
+      }
+    });
+   
   }
+  
 
   void _searchNow() => _runSearch(textSearch.text);
 

@@ -225,7 +225,7 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.w400),
                     ),
                     ListView.builder(
-                      //  physics: NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: article.length,
                       itemBuilder: (context, index) {
@@ -239,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   ],
-                ),
+                ), 
               ),
             ),
     );

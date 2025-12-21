@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_app/provider/firestore_provider.dart';
+import 'package:new_app/ui/login/login_page.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -179,6 +180,7 @@ class _SignUpState extends State<SignUp> {
                               ),
                               color: Color.fromARGB(255, 58, 152, 228),
                             ),
+                            
                             child: const Center(
                               child: Text(
                                 'Sign up',
@@ -190,25 +192,34 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                         ),
-                  // Container(
-                  //   height: 50,
-                  //   width: 0.8 * w,
-                  //   decoration: const BoxDecoration(
-                  //     borderRadius: BorderRadius.all(
-                  //       Radius.circular(30),
-                  //     ),
-                  //     color: Color.fromARGB(255, 58, 152, 228),
-                  //   ),
-                  //   child: const Center(
-                  //     child: Text(
-                  //       'Sign up',
-                  //       style: TextStyle(
-                  //         color: Colors.white,
-                  //         fontSize: 15,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+
+
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Have an acconunt?",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const LoginPage()),
+                                  );
+                                },
+                                child: const Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              )
+                            ]),
                 ],
               ),
             ),

@@ -231,6 +231,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
+                              
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
